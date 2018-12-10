@@ -36,6 +36,9 @@ console.log(mh.groestl(Buffer.from('1234test1234test1234test1234dasd')));
 console.log("Testing Neoscrypt");
 console.log(mh.neoscrypt(Buffer.from('1234test1234test1234test1234dasd')));
 
+console.log("Testing X22i");
+console.log(mh.x22i(Buffer.from('1234test1234test1234test1234dasd1234test1234test1234test1234dasd1234test1234test1234test1234dasd')).toString('hex'));
+
 // More test to follow when I work on fixing the rest
 //testing a webhook
 
