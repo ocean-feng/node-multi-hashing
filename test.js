@@ -38,8 +38,8 @@ var crypto = require('crypto');
 
 var data = new Buffer("600000006df1d486138ba00b9ceabc42c71c9d1925ea25896ee5555e78507642be52a4d761f93e1f507975d05a33de16bea7784f5cf492aa8e0eda6bf71029d78e3d939a5a2fa97e1d08379f000b3a0e", "hex");
 
-console.log("Testing bcd");
-console.log(mh.bcd(data).toString("hex"));
+console.log("Testing x16rt");
+console.log(mh.x16rt(data).toString("hex"));
 
 // More test to follow when I work on fixing the rest
 //testing a webhook

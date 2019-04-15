@@ -22,6 +22,8 @@
 #include "x16rt.h"
 //#include "common.h"
 
+#include "sha3/sph_sha2.h"
+
 enum Algo {
 	BLAKE = 0,
 	BMW,
@@ -42,6 +44,23 @@ enum Algo {
 	HASH_FUNC_COUNT
 };
 
+
+static void sha256d(const char* output, char* input, uint32_t len)
+{
+	uint32_t hashA[32], hashB[32];
+
+	sph_sha256_context ctx_sha2;
+
+	sph_sha256_init(&ctx_sha2);
+
+	sph_sha256(&ctx_sha2, input, len);
+	sph_sha256_close(&ctx_sha2, hashA);
+
+	sph_sha256(&ctx_sha2, hashA, 32);
+	sph_sha256_close(&ctx_sha2, hashB);
+
+	memcpy(output, hashB, 32);
+}
 
 #define TIME_MASK 0xffffff80
 static void getTimeHash(const uint32_t timeStamp, void* timeHash)
