@@ -10,34 +10,36 @@ var crypto = require('crypto');
 
 // this needs more work... I need a something to pass into these hashers and get back and assert..
 
-var nTime = "1472669240";
-var merkleTree = Buffer.from('7eb35ada44', 'hex');
-var nonce = "211447";
-var headerBuffer = serializeHeader(
-    {
-        "bits": "1f01ffff", 
-        "previousblockhash": "0",
-        "version": 1
-    }, 
-    merkleTree.toString('hex'), nTime, nonce
-);
-console.log("Testing ScryptN");
-//console.log(merkleTree.toString('hex'));
-//console.log(headerBuffer.toString('hex'));
-console.log(mh.scryptn(headerBuffer, 20));
-//console.log( reverseBuffer( sha256d(headerBuffer) ).toString('hex') );
+//var nTime = "1472669240";
+//var merkleTree = Buffer.from('7eb35ada44', 'hex');
+//var nonce = "211447";
+//var headerBuffer = serializeHeader(
+//    {
+//        "bits": "1f01ffff", 
+//        "previousblockhash": "0",
+//        "version": 1
+//    }, 
+//    merkleTree.toString('hex'), nTime, nonce
+//);
+//console.log("Testing ScryptN");
+////console.log(merkleTree.toString('hex'));
+////console.log(headerBuffer.toString('hex'));
+//console.log(mh.scryptn(headerBuffer, 20));
+////console.log( reverseBuffer( sha256d(headerBuffer) ).toString('hex') );
+//
+//console.log("Testing Skein");
+//console.log(mh.skein(Buffer.from('1234test1234test1234test1234dasd')));
+//
+//console.log("Testing Groestl");
+//console.log(mh.groestl(Buffer.from('1234test1234test1234test1234dasd')));
+//
+//console.log("Testing Neoscrypt");
+//console.log(mh.neoscrypt(Buffer.from('1234test1234test1234test1234dasd')));
 
-console.log("Testing Skein");
-console.log(mh.skein(Buffer.from('1234test1234test1234test1234dasd')));
+var data = new Buffer("600000006df1d486138ba00b9ceabc42c71c9d1925ea25896ee5555e78507642be52a4d761f93e1f507975d05a33de16bea7784f5cf492aa8e0eda6bf71029d78e3d939a5a2fa97e1d08379f000b3a0e", "hex");
 
-console.log("Testing Groestl");
-console.log(mh.groestl(Buffer.from('1234test1234test1234test1234dasd')));
-
-console.log("Testing Neoscrypt");
-console.log(mh.neoscrypt(Buffer.from('1234test1234test1234test1234dasd')));
-
-console.log("Testing X22i");
-console.log(mh.x22i(Buffer.from('1234test1234test1234test1234dasd1234test1234test1234test1234dasd1234test1234test1234test1234dasd')).toString('hex'));
+console.log("Testing bcd");
+console.log(mh.bcd(data).toString("hex"));
 
 // More test to follow when I work on fixing the rest
 //testing a webhook

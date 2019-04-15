@@ -40,10 +40,13 @@ extern "C" {
     #include "x14.h"
     #include "x15.h"
     #include "x16r.h"
+    #include "x16rt.h"
     #include "zr5.h"
     #include "yescrypt/yescrypt.h"
     #include "yescrypt/sha256_Y.h"
 	#include "x22i.h"
+    #include "bcd.h"
+    #include "lyra2rev3.h"
 }
 
 #include "boolberry.h"
@@ -53,6 +56,46 @@ extern "C" {
 
 using namespace node;
 using namespace v8;
+
+NAN_METHOD(bcd) {
+
+    if (info.Length() < 1)
+        return THROW_ERROR_EXCEPTION("You must provide one argument.");
+
+    Local<Object> target = Nan::To<Object>(info[0]).ToLocalChecked();
+
+    if(!Buffer::HasInstance(target))
+        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char *output = (char*) malloc(sizeof(char) * 32);
+
+    uint32_t input_len = Buffer::Length(target);
+
+    bcd_hash(input, output, input_len);
+
+    info.GetReturnValue().Set(Nan::NewBuffer(output, 32).ToLocalChecked());
+}
+
+NAN_METHOD(lyra2rev3) {
+
+    if (info.Length() < 1)
+        return THROW_ERROR_EXCEPTION("You must provide two arguments.");
+
+    Local<Object> target = Nan::To<Object>(info[0]).ToLocalChecked();
+
+    if(!Buffer::HasInstance(target))
+        return THROW_ERROR_EXCEPTION("Argument should be a buffer object.");
+
+    char * input = Buffer::Data(target);
+    char *output = (char*) malloc(sizeof(char) * 32);
+
+    uint32_t input_len = Buffer::Length(target);
+
+    lyra2rev3_hash(input, output, input_len);
+
+    info.GetReturnValue().Set(Nan::NewBuffer(output, 32).ToLocalChecked());
+}
 
 NAN_METHOD(lyra2rev2) {
 
@@ -664,6 +707,7 @@ NAN_METHOD(yescrypt) {
 
 NAN_MODULE_INIT(init) {
     Nan::Set(target, Nan::New("lyra2z").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(lyra2z)).ToLocalChecked());
+    Nan::Set(target, Nan::New("bcd").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(bcd)).ToLocalChecked());
 	Nan::Set(target, Nan::New("x22i").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(x22i)).ToLocalChecked());
     Nan::Set(target, Nan::New("lyra2rev2").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(lyra2rev2)).ToLocalChecked());
     Nan::Set(target, Nan::New("quark").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(quark)).ToLocalChecked());

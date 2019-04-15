@@ -19,7 +19,7 @@
 #include "sha3/sph_shabal.h"
 #include "sha3/sph_whirlpool.h"
 #include "sha3/sph_sha2.h"
-#include "x16r.h"
+#include "x16rt.h"
 //#include "common.h"
 
 enum Algo {
@@ -42,6 +42,15 @@ enum Algo {
 	HASH_FUNC_COUNT
 };
 
+
+#define TIME_MASK 0xffffff80
+static void getTimeHash(const uint32_t timeStamp, void* timeHash)
+{
+	int32_t maskedTime = timeStamp & TIME_MASK;
+
+	sha256d((unsigned char*)timeHash, (const unsigned char*)&(maskedTime), sizeof(maskedTime));
+}
+
 static void getAlgoString(const uint8_t* prevblock, char *output)
 {
 	char *sptr = output;
@@ -59,7 +68,7 @@ static void getAlgoString(const uint8_t* prevblock, char *output)
 	*sptr = '\0';
 }
 
-void x16r_hash(const char* input, char* output, uint32_t len)
+void x16rt_hash(const char* input, char* output, uint32_t len)
 {
 	uint32_t hash[64/4];
 	char hashOrder[HASH_FUNC_COUNT + 1] = { 0 };
@@ -85,7 +94,13 @@ void x16r_hash(const char* input, char* output, uint32_t len)
 	int size = len;
     int i;
 
-	getAlgoString(&input[4], hashOrder);
+	uint32_t *in32 = (uint32_t*)input;
+	uint32_t ntime = in32[17];
+	uint32_t timeHash[8];
+	getTimeHash(ntime, &timeHash);
+	getAlgoString(&timeHash[0], hashOrder);
+
+	//getAlgoString(&input[4], hashOrder);
 
 	for (i = 0; i < 16; i++)
 	{
